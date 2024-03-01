@@ -1,0 +1,44 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index dba51dbf..f0dde42c 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -231,11 +231,16 @@ if (USE_CUDA)
+         set(CMAKE_CUDA_ARCHITECTURES "50;60;70;80")
+         message("-- Setting CUDA Architecture to ${CMAKE_CUDA_ARCHITECTURES}")
+       endif()
++
++      if(UNIX AND NOT BUILD_SHARED_LIBS)
++        set(CUDA_LIB_EXT "_static")
++      endif()
++
+       list(APPEND CERES_CUDA_LIBRARIES
+-        CUDA::cublas
+-        CUDA::cudart
+-        CUDA::cusolver
+-        CUDA::cusparse)
++        CUDA::cublas${CUDA_LIB_EXT}
++        CUDA::cudart${CUDA_LIB_EXT}
++        CUDA::cusolver${CUDA_LIB_EXT}
++        CUDA::cusparse${CUDA_LIB_EXT})
+       set(CMAKE_CUDA_RUNTIME_LIBRARY NONE)
+     else (CUDAToolkit_FOUND)
+       message("-- Did not find CUDA, disabling CUDA support.")
+diff --git a/internal/ceres/CMakeLists.txt b/internal/ceres/CMakeLists.txt
+index f9fc2415..a2f73943 100644
+--- a/internal/ceres/CMakeLists.txt
++++ b/internal/ceres/CMakeLists.txt
+@@ -120,10 +120,10 @@ endif()
+ 
+ if (USE_CUDA)
+   list(APPEND CERES_LIBRARY_PRIVATE_DEPENDENCIES
+-    CUDA::cublas
+-    CUDA::cudart
+-    CUDA::cusolver
+-    CUDA::cusparse)
++    CUDA::cublas${CUDA_LIB_EXT}
++    CUDA::cudart${CUDA_LIB_EXT}
++    CUDA::cusolver${CUDA_LIB_EXT}
++    CUDA::cusparse${CUDA_LIB_EXT})
+   set_source_files_properties(cuda_kernels_vector_ops.cu.cc PROPERTIES LANGUAGE CUDA)
+   set_source_files_properties(cuda_kernels_bsm_to_crs.cu.cc PROPERTIES LANGUAGE CUDA)
+   add_library(ceres_cuda_kernels STATIC cuda_kernels_vector_ops.cu.cc cuda_kernels_bsm_to_crs.cu.cc)

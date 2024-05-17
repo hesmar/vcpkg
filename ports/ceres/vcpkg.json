@@ -39,6 +39,9 @@
         "lapack"
       ]
     },
+    "schur": {
+      "description": "Enable fixed-size Schur specializations in Ceres"
+    },
     "suitesparse": {
       "description": "SuiteSparse support for Ceres",
       "dependencies": [

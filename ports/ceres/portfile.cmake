@@ -26,6 +26,7 @@ file(REMOVE "${SOURCE_PATH}/cmake/FindMETIS.cmake")
 
 vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
     FEATURES
+        "schur"             SCHUR_SPECIALIZATIONS
         "suitesparse"       SUITESPARSE
         "lapack"            LAPACK
         "eigensparse"       EIGENSPARSE

@@ -18,6 +18,7 @@ vcpkg_from_github(
         0003_fix_exported_ceres_config.patch
         find-package-required.patch
         link-static-cuda-libs.patch
+        fix-cuda-architectures.patch
 )
 
 file(REMOVE "${SOURCE_PATH}/cmake/FindGlog.cmake")

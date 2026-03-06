@@ -53,6 +53,24 @@ vcpkg_make_install()
 vcpkg_copy_pdbs()
 vcpkg_fixup_pkgconfig()
 
+# On Linux, ffi.h may be installed into an arch-specific or version-specific subdirectory
+# (e.g. include/aarch64-linux-gnu/ffi.h or lib/libffi-VERSION/include/ffi.h).
+# Search recursively and move headers to the top-level include dir.
+if(NOT EXISTS "${CURRENT_PACKAGES_DIR}/include/ffi.h")
+    file(GLOB_RECURSE FFI_H "${CURRENT_PACKAGES_DIR}/ffi.h")
+    if(FFI_H)
+        list(GET FFI_H 0 FFI_H_FOUND)
+        get_filename_component(FFI_H_DIR "${FFI_H_FOUND}" DIRECTORY)
+        file(COPY "${FFI_H_FOUND}" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+        file(REMOVE "${FFI_H_FOUND}")
+        file(GLOB FFI_TARGET_H "${FFI_H_DIR}/ffitarget.h")
+        if(FFI_TARGET_H)
+            file(COPY "${FFI_TARGET_H}" DESTINATION "${CURRENT_PACKAGES_DIR}/include")
+            file(REMOVE "${FFI_TARGET_H}")
+        endif()
+    endif()
+endif()
+
 if (VCPKG_LIBRARY_LINKAGE STREQUAL "static")
     vcpkg_replace_string("${CURRENT_PACKAGES_DIR}/include/ffi.h" "defined(FFI_STATIC_BUILD)" "1")
 endif()
